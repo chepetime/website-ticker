@@ -34,11 +34,11 @@ lib.create = (dir, file, data, callback) => {
     if (err || !fileDescriptor) {
       return callback(ERROR_MESSAGES_CREATE.create);
     }
-    fs.writeFile(fileDescriptor, JSON.stringify(data), errWrite => {
+    fs.writeFile(fileDescriptor, JSON.stringify(data), (errWrite) => {
       if (errWrite) {
         return callback(ERROR_MESSAGES_CREATE.write);
       }
-      fs.close(fileDescriptor, errClose => {
+      fs.close(fileDescriptor, (errClose) => {
         callback(errClose ? ERROR_MESSAGES_CREATE.close : false);
       });
       return false;
@@ -64,17 +64,17 @@ lib.update = (dir, file, data, callback) => {
       callback(ERROR_MESSAGES_UPDATE.open);
       return false;
     }
-    fs.ftruncate(fileDescriptor, errTruncate => {
+    fs.ftruncate(fileDescriptor, (errTruncate) => {
       if (errTruncate) {
         callback(ERROR_MESSAGES_UPDATE.truncate);
         return false;
       }
-      fs.writeFile(fileDescriptor, JSON.stringify(data), errWrite => {
+      fs.writeFile(fileDescriptor, JSON.stringify(data), (errWrite) => {
         if (errWrite) {
           callback(ERROR_MESSAGES_UPDATE.write);
           return false;
         }
-        fs.close(fileDescriptor, errClose => {
+        fs.close(fileDescriptor, (errClose) => {
           callback(errClose ? ERROR_MESSAGES_UPDATE.close : false);
         });
         return false;
@@ -87,7 +87,7 @@ lib.update = (dir, file, data, callback) => {
 };
 
 lib.delete = (dir, file, callback) => {
-  fs.unlink(filePath(dir, file), err => {
+  fs.unlink(filePath(dir, file), (err) => {
     callback(err ? ERROR_MESSAGES_DELETE.unlink : false);
   });
 };
@@ -100,8 +100,8 @@ lib.list = (dir, callback) => {
 
     if (!err && data && data.length > 0) {
       const trimmedFilenames = data
-        .map(filename => filename.replace('.json', ''))
-        .filter(el => el[0] !== '.');
+        .map((filename) => filename.replace('.json', ''))
+        .filter((el) => el[0] !== '.');
       callback(false, trimmedFilenames);
     }
   });

@@ -6,7 +6,7 @@ const handleTextInputValid = (field, valid) => {
   return typeof field === 'string' && valid.indexOf(field) > -1 ? field : false;
 };
 
-const handleTextBoolean = field => {
+const handleTextBoolean = (field) => {
   return typeof field === 'boolean' && field === true;
 };
 
@@ -18,7 +18,7 @@ const handleNumberInput = (field, min = 1, max = 5) => {
   return typeof field === 'number' && field > min && field <= max ? field : false;
 };
 
-const handleObjectInput = field => {
+const handleObjectInput = (field) => {
   return typeof field === 'object' && field !== null ? field : false;
 };
 

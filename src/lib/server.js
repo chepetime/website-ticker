@@ -44,7 +44,7 @@ server.handleServer = (req, res) => {
 
   let payload = '';
 
-  req.on('data', data => {
+  req.on('data', (data) => {
     payload += decoder.write(data);
   });
 

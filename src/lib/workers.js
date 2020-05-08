@@ -16,9 +16,9 @@ const logs = require('./logs');
 
 const workers = {};
 
-workers.alertUserStatusChange = newCheckData => {
+workers.alertUserStatusChange = (newCheckData) => {
   const message = ` Alert: Your check for ${newCheckData.method.toUpperCase} ${newCheckData.protocol}://${newCheckData.url} is currently ${newCheckData.state}`;
-  helpers.sendTwillioSms(newCheckData.phone, message, err => {
+  helpers.sendTwillioSms(newCheckData.phone, message, (err) => {
     if (!err) {
       debug('Success, user was alerted to a status change.', message);
     } else {
@@ -43,7 +43,7 @@ workers.processCheckOutcome = (check, checkOutcome) => {
 
   workers.log(check, checkOutcome, state, alertWarranted, newCheckData.lastCheck);
 
-  data.update('checks', newCheckData.id, newCheckData, err => {
+  data.update('checks', newCheckData.id, newCheckData, (err) => {
     if (err) {
       debug('Couldn`t update check');
     } else {
@@ -59,7 +59,7 @@ workers.processCheckOutcome = (check, checkOutcome) => {
 };
 
 // Perform the check, send the check and the outcome to the next step in the process
-workers.performCheck = check => {
+workers.performCheck = (check) => {
   const { protocol, method, timeoutSecs } = check;
 
   // Prepare the initial check outcome
@@ -84,7 +84,7 @@ workers.performCheck = check => {
   };
 
   const moduleToUse = protocol === 'http' ? http : https;
-  const req = moduleToUse.request(requestDetails, res => {
+  const req = moduleToUse.request(requestDetails, (res) => {
     checkOutcome.responseCode = res.statusCode;
     if (!outcomeSent) {
       workers.processCheckOutcome(check, checkOutcome);
@@ -92,7 +92,7 @@ workers.performCheck = check => {
     }
   });
 
-  req.on('error', e => {
+  req.on('error', (e) => {
     checkOutcome.error = {
       error: true,
       value: e,
@@ -103,7 +103,7 @@ workers.performCheck = check => {
     }
   });
 
-  req.on('timeout', e => {
+  req.on('timeout', (e) => {
     checkOutcome.error = {
       error: true,
       value: 'timeout',
@@ -117,7 +117,7 @@ workers.performCheck = check => {
   req.end();
 };
 
-workers.validateCheckData = check => {
+workers.validateCheckData = (check) => {
   const validCheck = utils.handleObjectInput(check) || {};
   validCheck.id = utils.handleTextInput(validCheck.id, 20);
   validCheck.phone = utils.handleTextInput(validCheck.phone, 10);
@@ -157,7 +157,7 @@ workers.gatherAllChecks = () => {
   data.list('checks', (err, checks) => {
     if (!err && checks && checks.length > 0) {
       debug(`Processing ${checks.length} checks`);
-      checks.forEach(check => {
+      checks.forEach((check) => {
         // Real in the check data
         data.read('checks', check, (errCheck, checkData) => {
           if (!errCheck && checkData) {
@@ -176,7 +176,7 @@ workers.gatherAllChecks = () => {
 
 workers.log = (check, outcome, state, alert, time) => {
   const logString = JSON.stringify({ check, outcome, state, alert, time });
-  logs.append(check.id, logString, err => {
+  logs.append(check.id, logString, (err) => {
     if (!err) {
       // debug('Logging to file succedded');
     } else {
@@ -201,14 +201,14 @@ workers.rotateLogs = () => {
     if (logs.length < 1) {
       return debug('No logs found');
     }
-    logList.forEach(el => {
+    logList.forEach((el) => {
       const logId = el.replace('.log', '');
       const newFileId = `${logId}-${Date.now()}`;
-      logs.compress(logId, newFileId, errCompress => {
+      logs.compress(logId, newFileId, (errCompress) => {
         if (errCompress) {
           return debug('Error');
         }
-        logs.truncate(logId, errTruncate => {
+        logs.truncate(logId, (errTruncate) => {
           if (errTruncate) {
             return debug('Error');
           }

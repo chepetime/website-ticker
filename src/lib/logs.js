@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 /**
  * Logs
@@ -18,11 +19,11 @@ lib.append = (file, str, callback) => {
     }
 
     if (fileDescriptor) {
-      fs.appendFile(fileDescriptor, `${str}\n`, errAppending => {
+      fs.appendFile(fileDescriptor, `${str}\n`, (errAppending) => {
         if (errAppending) {
           return callback('Error appending the file');
         }
-        fs.close(fileDescriptor, errClose => {
+        fs.close(fileDescriptor, (errClose) => {
           if (errClose) {
             return callback('Error appending the file');
           }
@@ -40,7 +41,7 @@ lib.list = (showCompressed, callback) => {
     }
 
     const trimmedFileNames = data
-      .map(fileName => {
+      .map((fileName) => {
         if (fileName.indexOf('.log') > 1) {
           return fileName.replace('.log', '');
         }
@@ -50,7 +51,7 @@ lib.list = (showCompressed, callback) => {
 
         return false;
       })
-      .filter(el => !!el);
+      .filter((el) => !!el);
 
     return callback(false, trimmedFileNames);
   });
@@ -72,11 +73,11 @@ lib.compress = (id, newFile, callback) => {
         if (errOpen || !fileDescriptor) {
           return callback(errOpen);
         }
-        return fs.writeFile(fileDescriptor, buffer.toString('base64'), errWrite => {
+        return fs.writeFile(fileDescriptor, buffer.toString('base64'), (errWrite) => {
           if (errWrite) {
             return callback(errWrite);
           }
-          return fs.close(fileDescriptor, errClose => {
+          return fs.close(fileDescriptor, (errClose) => {
             if (errClose) {
               return callback(errClose);
             }
@@ -108,7 +109,7 @@ lib.decompress = (id, callback) => {
 };
 
 lib.truncate = (id, callback) => {
-  return fs.truncate(`${lib.baseDir + id}.log`, 0, errTruncate => callback(errTruncate || false));
+  return fs.truncate(`${lib.baseDir + id}.log`, 0, (errTruncate) => callback(errTruncate || false));
 };
 
 module.exports = lib;

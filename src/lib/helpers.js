@@ -11,16 +11,13 @@ const config = require('./config.js');
 
 const helpers = {};
 
-helpers.hash = password => {
+helpers.hash = (password) => {
   return typeof password === 'string' && password.length > 0
-    ? crypto
-        .createHmac('sha256', config.hashingSecret)
-        .update(password)
-        .digest('hex')
+    ? crypto.createHmac('sha256', config.hashingSecret).update(password).digest('hex')
     : false;
 };
 
-helpers.parseJsonToObject = str => {
+helpers.parseJsonToObject = (str) => {
   try {
     return JSON.parse(str);
   } catch (err) {
@@ -71,7 +68,7 @@ helpers.sendTwillioSms = (phone, msg, callback) => {
     },
   };
 
-  const req = https.request(requestDetails, res => {
+  const req = https.request(requestDetails, (res) => {
     const status = res.statusCode;
     if (status === 200 || status === 201) {
       return callback(false);
@@ -79,7 +76,7 @@ helpers.sendTwillioSms = (phone, msg, callback) => {
     return callback(status);
   });
 
-  req.on('error', e => {
+  req.on('error', (e) => {
     return callback(e);
   });
 
