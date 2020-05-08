@@ -14,7 +14,20 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index"
+    "start": "NODE_ENV=dev node src/index.js",
+    "start:nodemon": "NODE_ENV=dev nodemon src/index.js",
+    "start:prod": "NODE_ENV=production nodemon src/index.js",
+    "start:nodemon:debug:workers": "NODE_ENV=dev NODE_DEBUG=workers nodemon src/index.js",
+    "start:nodemon:debug:server": "NODE_ENV=dev NODE_DEBUG=server nodemon src/index.js"
   },
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.5"
+  }
 }
