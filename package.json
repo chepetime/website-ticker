@@ -1,0 +1,20 @@
+{
+  "name": "website-ticker",
+  "description": "> Simple website response tracker",
+  "license": "MIT",
+  "author": "",
+  "homepage": "https://github.com/chepetime/website-ticker#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chepetime/website-ticker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chepetime/website-ticker/issues"
+  },
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index"
+  },
+  "keywords": []
+}
